@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code con Imagen y Texto Mejorado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        }
+
+        .qr-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+        }
+    </style>
+</head>
+<body>
+    <div class="qr-container">
+        <canvas id="qrCanvas"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        const qrCanvas = document.getElementById("qrCanvas");
+        const qrLink = "https://mb-iota.vercel.app/"; // Enlace del QR
+        
+        QRCode.toCanvas(qrCanvas, qrLink, {
+            width: 350,
+            margin: 1,
+            color: {
+                dark: "#000000",
+                light: "#ffffff"
+            }
+        }, function (error) {
+            if (!error) {
+                const ctx = qrCanvas.getContext("2d");
+
+                // Cargar imagen en el centro del QR
+                const img = new Image();
+                img.src = "https://media.istockphoto.com/id/659261944/es/vector/de-manicura-sal%C3%B3n.jpg?s=612x612&w=0&k=20&c=xuYWl9y0pA3owTm9IXtZp3SbHJp7XSqgx_3OtuoDhr4="; // Imagen
+                img.onload = () => {
+                    const imgSize = 80; // Tamaño de la imagen
+                    const imgX = (qrCanvas.width - imgSize) / 2;
+                    const imgY = (qrCanvas.height - imgSize) / 2 - 10; // Mover un poco hacia arriba para dejar espacio para el texto
+                    ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
+
+                    // Dibujar fondo para el texto
+                    const textWidth = 100;
+                    const textHeight = 30;
+                    const textX = (qrCanvas.width - textWidth) / 2;
+                    const textY = imgY + imgSize + 10; // Justo debajo de la imagen
+                    ctx.fillStyle = "#ffffff"; // Fondo blanco
+                    ctx.fillRect(textX, textY, textWidth, textHeight);
+
+                    // Dibujar el texto encima del fondo
+                    ctx.font = "bold 18px Arial";
+                    ctx.fillStyle = "#000000"; // Texto negro
+                    ctx.textAlign = "center";
+                    ctx.fillText("ESTUDIO MB", qrCanvas.width / 2, textY + textHeight / 2 + 5);
+                };
+            } else {
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
